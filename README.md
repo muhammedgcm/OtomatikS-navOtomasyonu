@@ -58,6 +58,8 @@ Bu proje, Aksaray Üniversitesi için modern, kullanıcı dostu ve işlevsel bir
 - Django 5
 - Bootstrap 5
 - HTML5, CSS3, JavaScript
+- MySQL (DataBase)
+  
 
 ## Katkıda Bulunma
 Katkıda bulunmak isterseniz, lütfen bir fork oluşturun ve pull request gönderin.
