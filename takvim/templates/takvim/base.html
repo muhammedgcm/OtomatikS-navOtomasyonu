@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aksaray Üniversitesi Sınav Sistemi{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'takvim/style.css' %}">
+    {% block extra_head %}{% endblock %}
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #f4f6fa; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a237e;">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="{% static 'takvim/aksaray.jpg' %}" alt="Aksaray Üniversitesi" width="48" height="48" class="rounded-circle border border-light bg-white p-1" onerror="this.style.display='none'">
+                <span class="fw-bold fs-4">Aksaray Üniversitesi</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/sinav-listesi/">Sınav Listesi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/otomatik-sinav/">Otomatik Sınav Oluştur</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        <!-- Logo test: aşağıdaki img etiketiyle görselin yüklenip yüklenmediğini kontrol et -->
+        <div class="text-center mb-3">
+            <img src="{% static 'takvim/aksaray.jpg' %}" alt="Logo Test" width="80" style="border:2px solid #1a237e; border-radius:50%; background:#fff;" onerror="this.style.display='none'">
+        </div>
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="text-center py-3 mt-5" style="background: #1a237e; color: #fff;">
+        © 2024 Aksaray Üniversitesi | Bilgi İşlem Daire Başkanlığı
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

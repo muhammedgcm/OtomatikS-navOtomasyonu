@@ -1,0 +1,102 @@
+{% extends 'takvim/base.html' %}
+{% load static %}
+{% block title %}{{ bolum.ad }} - Sınav Listesi | Aksaray Üniversitesi{% endblock %}
+{% block content %}
+<form method="get" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label for="bolum" class="form-label">Bölüm</label>
+            <select name="bolum" id="bolum" class="form-select" required>
+                <option value="">Seçiniz</option>
+                {% for b in bolumler %}
+                    <option value="{{ b.id }}" {% if bolum and b.id == bolum.id %}selected{% endif %}>{{ b.ad }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="tur" class="form-label">Sınav Türü</label>
+            <select name="tur" id="tur" class="form-select" required>
+                <option value="">Seçiniz</option>
+                {% for t in turler %}
+                    <option value="{{ t.0 }}" {% if tur == t.0 %}selected{% endif %}>{{ t.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="donem" class="form-label">Dönem</label>
+            <select name="donem" id="donem" class="form-select" required>
+                <option value="">Seçiniz</option>
+                {% for d in donemler %}
+                    <option value="{{ d.id }}" {% if donem and d.id == donem.id %}selected{% endif %}>{{ d.ad }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-1 d-grid">
+            <button type="submit" class="btn btn-primary">Listele</button>
+        </div>
+    </div>
+</form>
+{% if sinavlar is not None %}
+<div class="card shadow-lg border-0 mb-5">
+    <div class="card-body">
+        <h2 class="text-center fw-bold mb-2" style="color:#1a237e;">{{ bolum.ad }} - {{ tur|title }} Sınav Programı</h2>
+        {% if donem %}
+            <h4 class="text-center mb-4" style="color:#3949ab;">{{ donem.ad }} Dönemi Sınav Listesi</h4>
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle table-bordered rounded-3 overflow-hidden">
+                <thead class="table-light">
+                <tr>
+                    <th>Ders</th>
+                    <th>Tür</th>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                    <th>Salon</th>
+                    <th>Gözetmen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sinav in sinavlar %}
+                <tr>
+                    <td class="fw-semibold">{{ sinav.ders.ad }}</td>
+                    <td><span class="badge bg-primary">{{ sinav.get_tur_display }}</span></td>
+                    <td>{{ sinav.tarih }}</td>
+                    <td>{{ sinav.saat|time:"H:i" }}</td>
+                    <td>{{ sinav.salon.ad }}</td>
+                    <td>{{ sinav.gozetmen.ad }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Bu türde sınav bulunamadı.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="d-flex justify-content-end">
+    <button id="pdfButton" class="btn btn-warning btn-lg mt-3" style="background:#ffd600; color:#1a237e; font-weight:600;">PDF Oluştur</button>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+document.getElementById('pdfButton').addEventListener('click', function () {
+    const pdfArea = document.querySelector('.card-body');
+    html2canvas(pdfArea).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pageWidth - 20;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+        pdf.save('sinav_listesi.pdf');
+    });
+});
+</script>
+{% endblock %}
